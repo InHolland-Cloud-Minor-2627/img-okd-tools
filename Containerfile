@@ -2,7 +2,8 @@ FROM registry.access.redhat.com/ubi10/ubi-minimal@sha256:04febb4a74cc9ef3eca05ef
 
 RUN microdnf install -y gzip tar gnupg2 && microdnf clean all
 
-ADD scripts/download-and-verify-tools.sh .
+WORKDIR /build
+COPY scripts/download-and-verify-tools.sh .
 RUN ./download-and-verify-tools.sh
 
 FROM registry.access.redhat.com/ubi10/ubi-minimal@sha256:04febb4a74cc9ef3eca05ef851d92957276cc6e82fe8cb1ee44abf5114d440d8

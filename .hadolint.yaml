@@ -1,0 +1,4 @@
+ignored:
+  # Pinning exact dnf package versions fights the point of tracking a
+  # rolling UBI base image; renovate keeps the base image itself current.
+  - DL3041

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -euo pipefail
 
 # Download OKD oc client
@@ -7,7 +7,7 @@ BASE="https://github.com/okd-project/okd/releases/download/$VERSION/"
 
 for file in openshift-client-linux-amd64-rhel9-$VERSION.tar.gz sha256sum.txt sha256sum.txt.asc
 do
-  curl -OL $BASE/$file
+  curl -OL "$BASE/$file"
 done
 
 # Verify downloads
@@ -23,7 +23,7 @@ BASE="https://github.com/yannh/kubeconform/releases/download/v0.8.0"
 
 for file in CHECKSUMS kubeconform-linux-amd64.tar.gz
 do
-  curl -OL $BASE/$file
+  curl -OL "$BASE/$file"
 done
 
 # Verify downloads
@@ -37,7 +37,7 @@ BASE="https://github.com/belastingdienst/opr-paas-cli/releases/download/v$PAAS_C
 
 for file in kubectl-paas_Linux_x86_64.tar.gz opr-paas-cli_${PAAS_CLI_VERSION}_checksums.txt
 do
-  curl -OL $BASE/$file
+  curl -OL "$BASE/$file"
 done
 
 # Verify downloads

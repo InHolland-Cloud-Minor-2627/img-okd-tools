@@ -19,7 +19,9 @@ sha256sum --check --ignore-missing sha256sum.txt
 tar zxf openshift-client-linux-amd64-rhel9-$VERSION.tar.gz && mv oc kubectl /usr/local/bin/
 
 # Download Kubeconform
-BASE="https://github.com/yannh/kubeconform/releases/download/v0.8.0"
+# renovate: datasource=github-releases depName=yannh/kubeconform
+KUBECONFORM_VERSION="0.8.0"
+BASE="https://github.com/yannh/kubeconform/releases/download/v$KUBECONFORM_VERSION"
 
 for file in CHECKSUMS kubeconform-linux-amd64.tar.gz
 do
@@ -32,6 +34,7 @@ sha256sum --check --ignore-missing CHECKSUMS
 tar zxf kubeconform-linux-amd64.tar.gz && mv kubeconform /usr/local/bin/
 
 # Download opr-paas-cli (kubectl-paas)
+# renovate: datasource=github-releases depName=belastingdienst/opr-paas-cli
 PAAS_CLI_VERSION="2.0.6"
 BASE="https://github.com/belastingdienst/opr-paas-cli/releases/download/v$PAAS_CLI_VERSION"
 

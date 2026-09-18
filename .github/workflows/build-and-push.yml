@@ -1,0 +1,45 @@
+name: Build and Push Image
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build:
+    name: Build image and publish to registry
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE_NAME: img-okd-tools
+      REGISTRY: ghcr.io/inholland-cloud-minor-2627
+
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+    - name: Buildah Action
+      id: build-image
+      uses: redhat-actions/buildah-build@719e3c40d8af9790c23eca13f7daa339f2867034 # v3
+      with:
+        image: ${{ env.IMAGE_NAME }}
+        tags: latest ${{ github.sha }} ${{ github.ref_name }}
+        containerfiles: |
+          ./Containerfile
+
+    - name: Log in to the GitHub Container registry
+      uses: redhat-actions/podman-login@50c2d9a331bb67c8fdab99b86455fad05e2e3252 # v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push to GitHub Container Repository
+      id: push-to-ghcr
+      uses: redhat-actions/push-to-registry@94ade333c38ecc0e60e94785125d9a52ca423b37 # v3
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: ${{ env.REGISTRY }}

@@ -1,0 +1,35 @@
+name-template: "$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+exclude-labels:
+  - 'skip-changelog'
+categories:
+  - title: "⚠️ Breaking Changes"
+    label: "⚠️ Breaking"
+  - title: "✨ New Features"
+    label: "✨ Feature"
+  - title: "🐛 Bug Fixes"
+    label: "🐛 Bug Fix"
+  - title: "📚 Documentation"
+    label: "📚 Docs"
+  - title: "🏠 Housekeeping"
+    label: "🏠 Housekeeping"
+  - title: "📦 Dependencies"
+    label: "dependencies"
+    collapse-after: 5
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
+change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+no-changes-template: "- No changes"
+template: |
+  ## Changes
+
+  $CHANGES

@@ -14,6 +14,8 @@ jobs:
   hadolint:
     name: Lint Containerfile
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
@@ -24,6 +26,10 @@ jobs:
   shellcheck:
     name: Lint scripts
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
@@ -36,15 +42,29 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
-    name: Build image (no push)
+    name: Build & scan image (no push)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - name: Buildah Action
+      id: build-image
       uses: redhat-actions/buildah-build@719e3c40d8af9790c23eca13f7daa339f2867034 # v3
       with:
         image: img-okd-tools
         tags: ci
         containerfiles: |
           ./Containerfile
+
+    - name: Save image for scanning
+      run: buildah push ${{ steps.build-image.outputs.image-with-tag }} docker-archive:image.tar
+
+    - name: Scan image for vulnerabilities
+      uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+      with:
+        input: image.tar
+        format: table
+        severity: HIGH,CRITICAL
+        ignore-unfixed: true

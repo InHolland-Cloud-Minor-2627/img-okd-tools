@@ -11,6 +11,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
     env:
       IMAGE_NAME: img-okd-tools
       REGISTRY: ghcr.io/inholland-cloud-minor-2627
@@ -27,6 +28,17 @@ jobs:
         containerfiles: |
           ./Containerfile
 
+    - name: Save image for scanning
+      run: buildah push ${{ steps.build-image.outputs.image-with-tag }} docker-archive:image.tar
+
+    - name: Scan image for vulnerabilities
+      uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+      with:
+        input: image.tar
+        format: table
+        severity: HIGH,CRITICAL
+        ignore-unfixed: true
+
     - name: Log in to the GitHub Container registry
       uses: redhat-actions/podman-login@50c2d9a331bb67c8fdab99b86455fad05e2e3252 # v2
       with:
@@ -41,3 +53,9 @@ jobs:
         image: ${{ steps.build-image.outputs.image }}
         tags: ${{ steps.build-image.outputs.tags }}
         registry: ${{ env.REGISTRY }}
+
+    - name: Install cosign
+      uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+    - name: Sign the image (keyless)
+      run: cosign sign --yes "${{ steps.push-to-ghcr.outputs.registry-path }}@${{ steps.push-to-ghcr.outputs.digest }}"

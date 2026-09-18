@@ -1,10 +1,8 @@
-name: Build and Push Image
+name: Release Image
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - '**.md'
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -25,7 +23,7 @@ jobs:
       uses: redhat-actions/buildah-build@719e3c40d8af9790c23eca13f7daa339f2867034 # v3
       with:
         image: ${{ env.IMAGE_NAME }}
-        tags: latest ${{ github.sha }} ${{ github.ref_name }}
+        tags: latest ${{ github.event.release.tag_name }}
         containerfiles: |
           ./Containerfile
 

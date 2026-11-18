@@ -7,11 +7,11 @@ BASE="https://github.com/okd-project/okd/releases/download/$VERSION/"
 
 for file in openshift-client-linux-amd64-rhel9-$VERSION.tar.gz sha256sum.txt sha256sum.txt.asc
 do
-  curl -OL "$BASE/$file"
+  curl --fail -OL "$BASE/$file"
 done
 
 # Verify downloads
-curl https://okd.io/okd-maintainers2.pub | gpg --import
+curl --fail https://okd.io/okd-maintainers.pub | gpg --import
 gpg --verify sha256sum.txt.asc sha256sum.txt
 sha256sum --check --ignore-missing sha256sum.txt
 
@@ -25,7 +25,7 @@ BASE="https://github.com/yannh/kubeconform/releases/download/v$KUBECONFORM_VERSI
 
 for file in CHECKSUMS kubeconform-linux-amd64.tar.gz
 do
-  curl -OL "$BASE/$file"
+  curl --fail -OL "$BASE/$file"
 done
 
 # Verify downloads
@@ -40,7 +40,7 @@ BASE="https://github.com/belastingdienst/opr-paas-cli/releases/download/v$PAAS_C
 
 for file in kubectl-paas_Linux_x86_64.tar.gz opr-paas-cli_${PAAS_CLI_VERSION}_checksums.txt
 do
-  curl -OL "$BASE/$file"
+  curl --fail -OL "$BASE/$file"
 done
 
 # Verify downloads

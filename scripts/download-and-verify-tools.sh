@@ -35,7 +35,7 @@ tar zxf kubeconform-linux-amd64.tar.gz && mv kubeconform /usr/local/bin/
 
 # Download opr-paas-cli (kubectl-paas)
 # renovate: datasource=github-releases depName=belastingdienst/opr-paas-cli
-PAAS_CLI_VERSION="2.0.6"
+PAAS_CLI_VERSION="2.0.7"
 BASE="https://github.com/belastingdienst/opr-paas-cli/releases/download/v$PAAS_CLI_VERSION"
 
 for file in kubectl-paas_Linux_x86_64.tar.gz opr-paas-cli_${PAAS_CLI_VERSION}_checksums.txt
